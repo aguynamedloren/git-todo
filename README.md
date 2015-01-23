@@ -2,6 +2,9 @@
 
 A git extension for branch-specific todo lists.
 
+##### Warning:
+
+This will probably break everything and ruin your life.  Good luck.
 
 ##### Install with homebrew:
 ```
