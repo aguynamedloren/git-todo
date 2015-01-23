@@ -1,0 +1,68 @@
+#!/usr/bin/env ruby
+
+CONFIG_FILE = ".git/config"
+TMP_FILE = "tmp/.todo"
+
+def parsed_config
+  @parsed_config ||= begin
+    parsed_config = Hash.new
+
+    File.readlines(CONFIG_FILE).each do |line|
+      if line[0] == "["
+        @group_name = line.gsub(/[\[\]]/, '').strip
+        parsed_config[@group_name] = Hash.new
+      else
+        parts = line.split("=", 2).map(&:strip)
+        param_name = parts[0]
+        param_val = parts[1].gsub("\\n", "\n")
+        parsed_config[@group_name][param_name] = param_val
+      end
+    end
+
+    parsed_config
+  end
+end
+
+def hash_to_config(hash)
+  lines = Array.new
+
+  hash.each do |group, attributes|
+    lines << "[#{group}]"
+    attributes.each do |attribute_name, attribute_value|
+      clean_value = attribute_value.gsub("\n", "\\n")
+      lines << "\t#{attribute_name} = #{clean_value}"
+    end
+  end
+
+  new_config = lines.join("\n")
+
+  new_config
+end
+
+def current_branch
+  @current_branch ||= begin
+    current_branch = `git branch`.split("\n").delete_if { |i| i[0] != "*" }
+    current_branch = current_branch.first.gsub!("* ","")
+  end
+end
+
+def write_config(config)
+  new_config = hash_to_config(config)
+  File.open(CONFIG_FILE, 'w') { |file| file.write(new_config) }
+end
+
+def edit_todo
+  parsed_config["branch \"#{current_branch}\""] ||= Hash.new
+  todo = parsed_config["branch \"#{current_branch}\""]["todo"]
+  editor = parsed_config["core"]["editor"]
+
+  File.open(TMP_FILE, 'w') { |file| file.write(todo) }
+  system(editor, TMP_FILE)
+  new_todo = File.open(TMP_FILE).read
+  parsed_config["branch \"#{current_branch}\""]["todo"] = new_todo
+  File.delete(TMP_FILE)
+  parsed_config
+end
+
+new_config = edit_todo
+write_config(new_config)
