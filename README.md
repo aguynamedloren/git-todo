@@ -1,6 +1,6 @@
 ### git todo
 
-A git extension for branch-specific todo lists.
+Maintain a todo list for each git branch with `git todo`.  Switch branches, see todo list for the current branch with `git todo`.  Simple as that.
 
 ##### Warning:
 
