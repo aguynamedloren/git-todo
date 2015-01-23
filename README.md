@@ -6,6 +6,8 @@ A git extension for branch-specific todo lists.
 
 This will probably break everything and ruin your life.  Good luck.
 
+---
+
 ##### Install with homebrew:
 ```
 brew install https://raw.github.com/aguynamedloren/git-todo/master/git-todo.rb
