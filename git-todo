@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 CONFIG_FILE = ".git/config"
-TMP_FILE = "tmp/.todo"
+TMP_FILE = ".git/TODO"
 
 def parsed_config
   @parsed_config ||= begin
@@ -54,7 +54,7 @@ end
 def edit_todo
   parsed_config["branch \"#{current_branch}\""] ||= Hash.new
   todo = parsed_config["branch \"#{current_branch}\""]["todo"]
-  editor = parsed_config["core"]["editor"]
+  editor = parsed_config["core"]["editor"] || "nano"
 
   File.open(TMP_FILE, 'w') { |file| file.write(todo) }
   system(editor, TMP_FILE)
