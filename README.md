@@ -2,7 +2,7 @@
 
 Maintain a todo list for each git branch with `git todo`.  Switch branches, see todo list for the current branch with `git todo`.  Simple as that.
 
-**Warning: This will probably break everything and ruin your life.  Good luck.**
+**Warning: This will probably break everything and ruin your life.**
 
 ---
 
